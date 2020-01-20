@@ -1,0 +1,63 @@
+	<script type="text/babel">
+            const Title = ({ className, title, subTitle }) => {
+                return (
+                    <div className = {className}>
+                        <h1>{title}</h1>
+                        <h3>{subTitle}</h3>
+                    </div>
+                )
+            };
+
+            const Movie = ({ className, name, link, color }) => {
+                return (
+                    <li className = {className}>{name}<a href = {link}> {link}</a></li>
+                )
+            };
+
+            const App = ({ className }) => {
+                return (
+                    <div className={className}>
+                        <div>
+                            <StyledTitle title="My Favourite Movies" subTitle="Marvel"/>
+                            <ol>
+                                <StyledMovie name = "End Game" link = "https://en.wikipedia.org/wiki/Avengers:_Endgame" color = "#ff5c33"/>
+                                <StyledMovie name = "Infinity War" link = "https://en.wikipedia.org/wiki/Avengers:_Infinity_War" color = "#8c8c8c"/>
+                                <StyledMovie name = "Civil War" link = "https://en.wikipedia.org/wiki/Captain_America:_Civil_War" color = "#b366ff"/>
+                            </ol>
+                        </div>
+                    </div>
+                )
+            };
+
+            const StyledApp = styled(App)`
+                background-color: papayawhip;
+                box-shadow: 0 0 5px gray;
+                padding: 10px;
+            `;
+
+            const StyledTitle = styled(Title)`
+                color: #009900;
+                padding: 0 0 0 20px;
+                font-family: monospace;
+                margin: 0 0 20px 0;
+            `;
+
+            const StyledMovie = styled(Movie)`
+                color: ${props => props.color};
+                font-weight: bold;
+                a:link {
+                    color: blue;
+                }
+                a:visited {
+                    color: blue;
+                }
+                a:hover {
+                    color: #ff5c33;
+                }
+            `;
+
+            ReactDOM.render(
+                <StyledApp/>,
+                document.getElementById('container')
+            );
+	</script>

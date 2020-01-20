@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Favourite movie</title>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/babel">
+            const Title = ({ className, title, subTitle }) => {
+                return (
+                    <div className = {className}>
+                        <h1>{title}</h1>
+                        <h3>{subTitle}</h3>
+                    </div>
+                )
+            };
+
+            const Movie = ({ className, name, link, color }) => {
+                return (
+                    <li className = {className}>{name}<a href = {link}> {link}</a></li>
+                )
+            };
+
+            class AppClassStateful extends React.Component {
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        movies: []
+                    }
+                }
+
+                componentDidMount() {
+                    (async () => {
+                        try {
+                            // Make an API Request and store the Response
+                            const response = await fetch('http://192.168.33.10:3004/movies');
+                            // Output HTTP Errors if any
+                            if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+                            // extract the JSON from the body of the Response
+                            const result = await response.json();
+
+                            // update the state variable
+                            this.setState({ movies: result });
+                        } catch(error) {
+                            // Output Networking Errors if any
+                            console.log('Fetch API Error: ' + error);
+                        }
+                    })();
+                }
+
+                render() {
+                    return (
+                        <ol>
+                            {this.state.movies.map(movie => (
+                                <StyledMovie key={movie.id} {...movie}/>
+                            ))}
+                        </ol>
+                    );
+                }
+            }
+
+            const AppHookStateful = () => {
+                const [movies, setMovies] = React.useState([]);
+
+                React.useEffect( () => {
+                    (async () => {
+                        try {
+                            // Make an API Request and store the Response
+                            const response = await fetch('http://192.168.33.10:3004/movies');
+
+                            // Output HTTP Errors if any
+                            if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+                            // extract the JSON from the body of the Response
+                            const result = await response.json();
+
+                            // update the state variable
+                            setMovies(result);
+                        } catch(error) {
+                            // Output Networking Errors if any
+                            console.log('Fetch API Error: ' + error);
+                        }
+                    })();
+                }, []);
+
+                return (
+                    <ol>
+                        {movies.map(movie => (
+                            <StyledMovie key={movie.id} {...movie}/>
+                        ))}
+                    </ol>
+                );
+            }
+
+            const StyledTitle = styled(Title)`
+                color: #009900;
+                padding: 0 0 0 20px;
+                font-family: monospace;
+                margin: 0 0 20px 0;
+            `;
+
+            const StyledMovie = styled(Movie)`
+                color: ${props => props.color};
+                font-weight: bold;
+                a:link {
+                    color: blue;
+                }
+                a:visited {
+                    color: blue;
+                }
+                a:hover {
+                    color: #ff5c33;
+                }
+            `;
+
+            ReactDOM.render(
+                <div>
+                    <StyledTitle title="My Favourite Movies" subTitle="Marvel"/>
+                    {/*<AppClassStateful/>*/}
+                    {<AppHookStateful/>}
+                </div>,
+                document.getElementById('container')
+            );
+        </script>
+    </body>
+</html>

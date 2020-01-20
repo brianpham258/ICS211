@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Employee list</title>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/babel">
+            const Title = ({className, title}) => {
+                return (
+                    <div className={className}>
+                        <h1>{title}</h1>
+                    </div>
+                );
+            }
+
+            const StyledTitle = styled(Title)`
+                color: #009900;
+                padding: 0 0 0 20px;
+                font-family: monospace;
+                margin: 0 0 20px 0;
+            `;
+
+            const Employee = ({ className, id, employee_name, employee_age, employee_salary, profile_image }) => {
+                return (
+                    <tr className={className}>
+                        <td>{id}</td>
+                        <td>{employee_name}</td>
+                        <td>{employee_age}</td>
+                        <td>{employee_salary}</td>
+                        <td>{profile_image}</td>
+                    </tr>
+                );
+            }
+
+            const StyledEmployee = styled(Employee)`
+                font-weight: bold;
+                font-family: monospace;
+            `;
+
+            const EmployeeList = ({ className, employees }) => {
+                return (
+                    <table className={className}>
+                        <thead>
+                            <tr>
+                                <th style={{ width: "10%"}}>ID</th>
+                                <th style={{ width: "30%"}}>Name</th>
+                                <th style={{ width: "20%"}}>Age</th>
+                                <th style={{ width: "30%"}}>Salary</th>
+                                <th style={{ width: "10 %"}}>Profile picture</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {employees.slice(0, 10).map(employee => (
+                                <StyledEmployee key={employee.id} {...employee}/>
+                            ))}
+                        </tbody>
+                    </table>
+                );
+            }
+            
+            const StyledEmployeeList = styled(EmployeeList)`
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                max-width: 500px;
+
+                td, th {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            `;
+
+
+            const EmployeeListContainer = () => {
+                const [employees, setEmployees] = React.useState([]);
+
+                React.useEffect(() => {
+                    (async () => {
+                        try {
+                            // Make an API Request and store the Response
+                            const response = await fetch ('http://dummy.restapiexample.com/api/v1/employees');
+
+                            // Output HTTP Errors if any
+                            if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+                            // extract the JSON from the body of the Response
+                            const result = await response.json();
+
+                            // update the state variable
+                            setEmployees(result);
+                        }
+                        catch(error) {
+                            // Output Networking Errors if any
+                            console.log('Fetch API Error: ' + error);
+                        }
+                    })();
+                },[]);
+
+                return <StyledEmployeeList employees={employees} />
+            }
+
+            ReactDOM.render(
+                <div>
+                    {<StyledTitle title="Employee List"/>}
+                    {<EmployeeListContainer/>}
+                </div>,
+                document.getElementById('container')
+            );
+        </script>
+    </body>
+</html>

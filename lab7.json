@@ -1,0 +1,25 @@
+{
+  "movies": [
+    {
+      "id": 1,
+      "name": "End Game",
+      "link": "https://en.wikipedia.org/wiki/Avengers:_Endgame",
+      "color": "#ff5c33",
+      "checked": true
+    },
+    {
+      "id": 2,
+      "name": "Infinity War",
+      "link": "https://en.wikipedia.org/wiki/Avengers:_Infinity_War",
+      "color": "#8c8c8c",
+      "checked": true
+    },
+    {
+      "id": 3,
+      "name": "Civil War",
+      "link": "https://en.wikipedia.org/wiki/Captain_America:_Civil_War",
+      "color": "#b366ff",
+      "checked": true
+    }
+  ]
+}

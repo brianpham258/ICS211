@@ -1,0 +1,404 @@
+<!--------------------------------------------------------Exercise 1--------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>211 Final</title>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/babel">
+            const Title = ({ className, title, subTitle }) => {
+                return (
+                    <div className = {className}>
+                        <h1>{title}</h1>
+                        <h2>{subTitle}</h2>
+                    </div>
+                )
+            };
+
+            const Course = ({ className, id, topic }) => {
+                return (
+                    <tr className={className} >
+                        <td>{id}</td>
+                        <td>{topic}</td>
+                    </tr>
+                )
+            };
+
+            const App = ({ className }) => {
+                const arr = [{id:0, topic:"Intro to the Course"}, 
+                            {id:1, topic:"Intro to Web Apps"}, 
+                            {id:2, topic:"Intro to VSC and Markdown"}, 
+                            {id:3, topic:"Intro to YAML, NODE.js, npm, and JSON"}, 
+                            {id:4, topic:"Intro to DevOps"}];
+
+                return (
+                    <div className={className}>
+                        <StyledTitle title="ICS 211 Web Applications" subTitle="Final Exam - Practical"/>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>LECTURE NUMBER</th>
+                                    <th>TOPIC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {arr.map(course => (
+                                    <StyledCourse id={course.id} {...course} />
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            };
+
+            const StyledTitle = styled(Title)`
+                text-transform: uppercase;
+                font-size: 90%;
+                border-bottom: 2px solid #111111;
+                border-top: 1px solid #999;
+                text-align: left;
+            `
+
+            const StyledCourse = styled(Course)`
+                td {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            `
+
+            ReactDOM.render(
+                <App/>,
+                document.getElementById('container')
+            );
+        </script>
+    </body>
+</html>
+
+
+<!--------------------------------------------------------Exercise 2--------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>211 Final</title>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/babel">
+            const Title = ({ className, title, subTitle }) => {
+                return (
+                    <div className = {className}>
+                        <h1>{title}</h1>
+                        <h2>{subTitle}</h2>
+                    </div>
+                );
+            };
+
+            const Course = ({ className, id, topic }) => {
+                return (
+                    <tr className={className} >
+                        <td>{id}</td>
+                        <td>{topic}</td>
+                    </tr>
+                )
+            };
+
+            const CourseList = () => {
+                const [courses, setCourses] = React.useState([]);
+
+                React.useEffect( () => {
+                    (async () => {
+                        try {
+                            // Make an API Request and store the Response
+                            const response = await fetch('http://2147.deploy.cs.camosun.bc.ca/lectures');
+
+                            // Output HTTP Errors if any
+                            if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+                            // extract the JSON from the body of the Response
+                            const result = await response.json();
+
+                            // update the state variable
+                            setCourses(result);
+                        }
+                        catch(error) {
+                            // Output Networking Errors if any
+                            console.log('Fetch API Error: ' + error);
+                        }
+                    })();
+                }, []);
+
+                return (
+                    <div>
+                        <StyledTitle title="ICS 211 Web Applications" subTitle="Final Exam - Practical" />
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>LECTURE NUMBER</th>
+                                    <th>TOPIC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {courses.map(course => (
+                                <StyledCourse id={course.id} {...course}/>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            }
+
+            const StyledTitle = styled(Title)`
+                text-transform: uppercase;
+                font-size: 90%;
+                border-bottom: 2px solid #111111;
+                border-top: 1px solid #999;
+                text-align: left;
+            `
+
+            const StyledCourse = styled(Course)`
+                td {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            `
+
+            ReactDOM.render(
+                <CourseList/>,
+                document.getElementById('container')
+            );
+        </script>
+    </body>
+</html>
+
+
+<!--------------------------------------------------------Exercise 3--------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!--------------------------------------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>211 Final</title>
+        <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
+        <script crossorigin src="https://cdn.jsdelivr.net/npm/react-router-dom@5/umd/react-router-dom.js"></script>
+    </head>
+    <body>
+        <div id="container"></div>
+        <script type="text/babel">
+            const Title = ({ className, title, subTitle }) => {
+                return (
+                    <div className = {className}>
+                        <h1>{title}</h1>
+                        <h2>{subTitle}</h2>
+                    </div>
+                );
+            };
+
+            const Course = ({ className, id, topic }) => {
+                return (
+                    <tr className={className} >
+                        <td>{id}</td>
+                        <td>{topic}</td>
+                    </tr>
+                )
+            };
+
+            const CourseList = () => {
+                const [courses, setCourses] = React.useState([]);
+                const Link = ReactRouterDOM.Link;
+
+                React.useEffect( () => {
+                    (async () => {
+                        try {
+                            // Make an API Request and store the Response
+                            const response = await fetch('http://2147.deploy.cs.camosun.bc.ca/lectures');
+
+                            // Output HTTP Errors if any
+                            if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+                            // extract the JSON from the body of the Response
+                            const result = await response.json();
+
+                            // update the state variable
+                            setCourses(result);
+                        }
+                        catch(error) {
+                            // Output Networking Errors if any
+                            console.log('Fetch API Error: ' + error);
+                        }
+                    })();
+                }, []);
+
+                return (
+                    <div>
+                        <StyledTitle title="ICS 211 Web Applications" subTitle="Final Exam - Practical" />
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>LECTURE NUMBER</th>
+                                    <th>TOPIC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    {courses.map(course => (
+                                <StyledCourse id={course.id} {...course}/>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            };
+
+            const CourseForm = () => {
+                const [select, setSelect] = React.useState();
+                const [value, setValue] = React.useState();
+                const [showForm, setShowForm] = React.useState(true);
+                // let history = ReactRouterDOM.useHistory();
+
+                const handleSelect = (event) => {
+                    setSelect(event.target.value);
+                }
+
+                const handleValue = (event) => {
+                    setValue(event.target.value);
+                }
+
+                const handleSubmit = (event) => {
+                    event.preventDefault();
+                    if(select === "lectures") {
+                        console.log("lecture");
+                        (async () => {
+                            try {
+                                const response = await fetch(`http://2147.deploy.cs.camosun.bc.ca/lectures`, {
+                                    //JSON object for options
+                                    method: 'POST',
+                                    body: {
+                                        "topic": value
+                                    }
+                                }); // close fetch call
+
+                                // Output HTTP Errors if any
+                                if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+                                // change status of showForm to false
+                                setShowForm(false);
+                            }
+                            catch(error) {
+                                // Output Networking Errors if any
+                                console.log('Fetch API Error: ' + error);
+                            }
+                        })();
+                    }
+                    else {
+                        console.log("lab");
+                        (async () => {
+                            try {
+                                const response = await fetch(`http://2147.deploy.cs.camosun.bc.ca/labs`, {
+                                    //JSON object for options
+                                    method: 'POST',
+                                    body: {
+                                        "topic": value
+                                    }
+                                }); // close fetch call
+
+                                // Output HTTP Errors if any
+                                if(!response.ok) throw Error(response.status + ': ' + response.statusText);
+
+                                // change status of showForm to false
+                                setShowForm(false);
+                            }
+                            catch(error) {
+                                // Output Networking Errors if any
+                                console.log('Fetch API Error: ' + error);
+                            }
+                        })();
+                    }
+                }
+
+                if (showForm) {
+                    return (
+                        <form onSubmit={handleSubmit}>
+                            <fieldset>
+                                <legend>Enter Lab/Lecture:</legend>
+                                <select value={select} onChange={handleSelect}>
+                                    <option value="labs">Lab</option>
+                                    <option value="lectures">Lecture</option>
+                                </select>
+                                <input type="text" name="topic" value="" onChange={handleValue}/>
+                                <input type="button" value="Submit" onClick={handleSubmit}/>
+                            </fieldset>
+                        </form>
+                    );
+                }
+                else {
+                    return <CourseList/>;
+                }
+            };
+
+            const App = () => {
+                const Router = ReactRouterDOM.BrowserRouter;
+                const Switch = ReactRouterDOM.Switch;
+                const Route = ReactRouterDOM.Route;
+            }
+
+            const StyledTitle = styled(Title)`
+                text-transform: uppercase;
+                font-size: 90%;
+                border-bottom: 2px solid #111111;
+                border-top: 1px solid #999;
+                text-align: left;
+            `
+
+            const StyledCourse = styled(Course)`
+                td {
+                    border: 1px solid #dddddd;
+                    text-align: left;
+                    padding: 8px;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #dddddd;
+                }
+            `
+
+            ReactDOM.render(
+                <CourseForm/>,
+                document.getElementById('container')
+            );
+        </script>
+    </body>
+</html>
